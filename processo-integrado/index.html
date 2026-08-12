@@ -342,6 +342,39 @@
       }
     }
 
+    /* No celular, o fullscreen mostra somente o slide e o botão para sair. */
+    @media (hover: none) and (pointer: coarse) {
+      .presentation.is-fullscreen .previous,
+      .presentation.is-fullscreen .next,
+      .presentation.is-fullscreen .page-count,
+      .presentation.is-fullscreen .progress,
+      .presentation.is-fullscreen .zoom-controls,
+      .presentation.is-fullscreen .zoom-status,
+      .presentation.pseudo-fullscreen .previous,
+      .presentation.pseudo-fullscreen .next,
+      .presentation.pseudo-fullscreen .page-count,
+      .presentation.pseudo-fullscreen .progress,
+      .presentation.pseudo-fullscreen .zoom-controls,
+      .presentation.pseudo-fullscreen .zoom-status {
+        display: none !important;
+      }
+    }
+
+    .presentation.touch-device.is-fullscreen .previous,
+    .presentation.touch-device.is-fullscreen .next,
+    .presentation.touch-device.is-fullscreen .page-count,
+    .presentation.touch-device.is-fullscreen .progress,
+    .presentation.touch-device.is-fullscreen .zoom-controls,
+    .presentation.touch-device.is-fullscreen .zoom-status,
+    .presentation.touch-device.pseudo-fullscreen .previous,
+    .presentation.touch-device.pseudo-fullscreen .next,
+    .presentation.touch-device.pseudo-fullscreen .page-count,
+    .presentation.touch-device.pseudo-fullscreen .progress,
+    .presentation.touch-device.pseudo-fullscreen .zoom-controls,
+    .presentation.touch-device.pseudo-fullscreen .zoom-status {
+      display: none !important;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .slide,
       .control,
@@ -433,6 +466,16 @@
       let pseudoFullscreen = false;
       let zoomStatusTimer = 0;
       let wheelLocked = false;
+
+      const touchMedia = window.matchMedia('(hover: none) and (pointer: coarse)');
+      stage.classList.toggle(
+        'touch-device',
+        stage.classList.contains('touch-device') || touchMedia.matches || navigator.maxTouchPoints > 0
+      );
+
+      stage.addEventListener('pointerdown', (event) => {
+        if (event.pointerType === 'touch') stage.classList.add('touch-device');
+      }, { passive: true });
 
       const nodes = slides.map((_source, index) => {
         const image = new Image();
